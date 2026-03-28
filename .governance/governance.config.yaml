@@ -1,0 +1,12 @@
+# Governance Configuration
+# Define required directories and secret detection sensitivity
+directories:
+  required:
+    - projects
+    - lab
+    - knowledge-base
+    - archive
+
+security:
+  gitleaks_enabled: true
+  secret_threshold: critical

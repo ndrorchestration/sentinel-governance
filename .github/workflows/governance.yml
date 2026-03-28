@@ -4,8 +4,16 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: zricethezav/gitleaks-action@v2.1.2
+
       - name: Run Sentinel Governance (Bash)
         run: bash .governance/governance_check.sh
+
       - name: Run Sentinel Governance (PowerShell)
         run: pwsh .governance/governance_check.ps1

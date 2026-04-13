@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
-    "lint": "eslint src/**/*.ts"
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
@@ -17,10 +17,10 @@
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.5",
-    "@types/express": "^4.17.21",
-    "@types/jsonwebtoken": "^9.0.6",
-    "@types/node": "^20.14.0",
+    "@types/express": "^4.17.25",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.39",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.9.3"
   }
 }

@@ -6,16 +6,25 @@ import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import AdmZip from 'adm-zip';
 
+process.loadEnvFile?.();
+
 const app = express();
 
 // --- Config guard ---
 const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET!;
 const APP_ID = process.env.GITHUB_APP_ID!;
 const PRIVATE_KEY_PATH = process.env.GITHUB_APP_PRIVATE_KEY_PATH || 'private-key.pem';
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT || 3000);
+const SENTINEL_MODE = (process.env.SENTINEL_MODE || 'observe').toLowerCase();
+const ORCHESTRATOR_URL = process.env.ORCHESTRATOR_URL || '';
+const ORCHESTRATOR_KEY = process.env.ORCHESTRATOR_KEY || '';
 
 if (!WEBHOOK_SECRET || !APP_ID) {
   throw new Error('GITHUB_WEBHOOK_SECRET and GITHUB_APP_ID must be set');
+}
+
+if (!['observe', 'repair'].includes(SENTINEL_MODE)) {
+  throw new Error("SENTINEL_MODE must be either 'observe' or 'repair'");
 }
 
 const PRIVATE_KEY = fs.readFileSync(path.resolve(PRIVATE_KEY_PATH), 'utf8');
@@ -157,16 +166,58 @@ interface PatchRequest {
   logTails: Record<string, string>;
 }
 
+interface PatchResponse {
+  patchedContent?: string;
+  workflowContent?: string;
+  patch?: string;
+}
+
 async function callLLMForPatch(req: PatchRequest): Promise<string | null> {
-  // TODO: replace with Apogee/Sentinel orchestrator API call
-  // Expected response: corrected full YAML workflow file content
-  console.log('[Sentinel][LLM stub] Would dispatch to orchestrator:', {
+  if (!ORCHESTRATOR_URL) {
+    console.log('[Sentinel][LLM] ORCHESTRATOR_URL is not configured; skipping patch generation.');
+    return null;
+  }
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (ORCHESTRATOR_KEY) {
+    headers.Authorization = `Bearer ${ORCHESTRATOR_KEY}`;
+  }
+
+  const payload = {
+    mode: SENTINEL_MODE,
     repoOwner: req.repoOwner,
     repoName: req.repoName,
-    failedJobCount: req.failedJobs.length,
-    logKeys: Object.keys(req.logTails),
-  });
-  return null;
+    headBranch: req.headBranch,
+    workflowPath: req.workflowPath,
+    workflowContent: req.workflowContent,
+    failedJobs: req.failedJobs,
+    logTails: req.logTails,
+  };
+
+  try {
+    const res = await axios.post<PatchResponse>(ORCHESTRATOR_URL, payload, {
+      headers,
+      timeout: 30_000,
+    });
+
+    const patchedContent =
+      res.data?.patchedContent ?? res.data?.workflowContent ?? res.data?.patch ?? null;
+
+    if (!patchedContent) {
+      console.log('[Sentinel][LLM] Orchestrator returned no patch.');
+      return null;
+    }
+
+    return patchedContent;
+  } catch (err: any) {
+    const status = err.response?.status;
+    const detail = err.response?.data || err.message;
+    console.error('[Sentinel][LLM] Orchestrator request failed', { status, detail });
+    return null;
+  }
 }
 
 // --- PR application ---
@@ -318,21 +369,29 @@ async function handleWorkflowRunEvent(payload: any, deliveryId: string) {
     logTails,
   });
 
-  if (patch) {
-    await applyPatchAsPR({
-      token,
-      repoOwner,
-      repoName,
-      baseBranch: headBranch,
-      workflowPath,
-      patchedContent: patch,
-      runId,
-    });
-  } else {
+  if (!patch) {
     console.log(`[Sentinel] No patch generated for ${repoOwner}/${repoName}#${runId}`);
+    return;
   }
+
+  if (SENTINEL_MODE !== 'repair') {
+    console.log(
+      `[Sentinel] Observe mode active; patch generated for ${repoOwner}/${repoName}#${runId} but PR creation was skipped.`
+    );
+    return;
+  }
+
+  await applyPatchAsPR({
+    token,
+    repoOwner,
+    repoName,
+    baseBranch: headBranch,
+    workflowPath,
+    patchedContent: patch,
+    runId,
+  });
 }
 
 app.listen(PORT, () => {
-  console.log(`[Sentinel] GitHub Operator listening on port ${PORT}`);
+  console.log(`[Sentinel] GitHub Operator listening on port ${PORT} in ${SENTINEL_MODE} mode`);
 });

@@ -53,12 +53,21 @@ curl -X POST http://localhost:3000/webhooks/github \
   -d @test/fixtures/workflow_run_failure.json
 ```
 
-## LLM Integration (TODO)
+## LLM Integration
 
-Wire `callLLMForPatch()` in `src/server.ts` to your orchestrator endpoint.
-Expected contract:
-- **Input:** `{ repoOwner, repoName, headBranch, workflowPath, workflowContent, failedJobs, logTails }`
-- **Output:** Full corrected YAML string (not a diff) or `null` if no fix available.
+`callLLMForPatch()` is wired to `ORCHESTRATOR_URL` in `src/server.ts`.
+
+Request payload:
+- **Input:** `{ mode, repoOwner, repoName, headBranch, workflowPath, workflowContent, failedJobs, logTails }`
+
+Accepted orchestrator response shapes:
+- `{ "patchedContent": "...yaml..." }`
+- `{ "workflowContent": "...yaml..." }`
+- `{ "patch": "...yaml..." }`
+
+Behavior by mode:
+- `SENTINEL_MODE=observe`: generate and log patch availability, but do not open a PR.
+- `SENTINEL_MODE=repair`: generate a patch and open a PR when a valid replacement workflow is returned.
 
 ## Failure Conclusions Handled
 

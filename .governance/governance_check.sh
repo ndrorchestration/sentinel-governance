@@ -1,12 +1,40 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-echo "🔍 Running Sentinel Governance Checks (Bash)..."
+echo "[Sentinel] Running Integrity Sweep..."
 
-# Check for required files
-echo "✓ Checking for governance compliance..."
+if grep -rnE "AIza[0-9A-Za-z]{35}|sk-[A-Za-z0-9]{32}" . \
+  --exclude-dir=.git \
+  --exclude-dir=.github \
+  --exclude-dir=.governance \
+  --exclude-dir=node_modules \
+  --exclude-dir=dist; then
+    echo "[!] CRITICAL: Potential secret found."
+    exit 1
+fi
 
-# Add your governance checks here
-echo "✓ All bash governance checks passed!"
+missing_dirs=()
+for dir in "projects" "lab" "knowledge-base" "archive"; do
+    if [ ! -d "$dir" ]; then
+        missing_dirs+=("$dir")
+    fi
+done
 
-exit 0
+if [ ${#missing_dirs[@]} -gt 0 ]; then
+    echo "[!] Missing required directories: ${missing_dirs[*]}"
+    exit 1
+fi
+
+missing_files=()
+for file in "README.md" "LICENSE" "CONTRIBUTING.md" "SECURITY.md"; do
+    if [ ! -f "$file" ]; then
+        missing_files+=("$file")
+    fi
+done
+
+if [ ${#missing_files[@]} -gt 0 ]; then
+    echo "[!] Missing required governance files: ${missing_files[*]}"
+    exit 1
+fi
+
+echo "[OK] Integrity Passed."

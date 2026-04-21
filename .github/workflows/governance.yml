@@ -10,7 +10,7 @@ jobs:
           fetch-depth: 0
 
       - name: Validate workflow syntax (actionlint)
-        uses: rhysd/actionlint@v1
+        uses: rhysd/actionlint@v1.7.7
         with:
           files: .github/workflows/governance.yml
 

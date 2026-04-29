@@ -1,5 +1,7 @@
 # Contributing
 
+> **Governance:** DGAF / Agent Sentinel — All changes to this repository are subject to Sentinel CI/CD integrity enforcement. Contributions must pass governance checks in `.governance/` before merge. See [DGAF-Framework](https://github.com/Flickerflash/DGAF-Framework) for spine documentation.
+
 ## Scope
 This repository contains governance checks and the Sentinel GitHub Operator.
 

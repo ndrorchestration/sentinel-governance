@@ -1,3 +1,9 @@
+# governance.example.yml
+# Reference only — NOT executed by GitHub Actions.
+# The live workflow is at .github/workflows/governance.yml
+# This file is retained as a human-readable reference.
+# See NDR-007 (Workflow File Deduplication) in knowledge-base/PATTERNS.md
+
 name: Governance Sweep
 on: [push, pull_request]
 jobs:

@@ -1,0 +1,60 @@
+# Doc-Lint CI Workflow
+# Pattern: P-24 (Canonical Practice Unit) | P-11 (11Q-Terminal-Gate gate 7 — Surface Consistency)
+# Owner: Agent Sentinel
+# Triggers: Pull requests + pushes to main touching markdown files
+# Purpose: Enforce markdown structural consistency across all docs;
+#          gate PR merge on zero markdownlint errors.
+#          Surfaces P-24 non-compliance as CI failures before merge.
+
+name: Doc Lint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '.markdownlint.yml'
+      - '.markdownlint.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '.markdownlint.yml'
+      - '.markdownlint.json'
+
+jobs:
+  markdownlint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli@0.39.0
+
+      - name: Run markdownlint
+        run: |
+          markdownlint \
+            --config .markdownlint.yml \
+            --ignore node_modules \
+            --ignore CHANGELOG.md \
+            '**/*.md'
+        # Exit code 1 on any lint error — blocks PR merge
+        # CHANGELOG.md is ignored: its auto-generated format may vary
+
+      - name: Report summary
+        if: always()
+        run: |
+          echo "## Doc Lint Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
+          echo "- Config: .markdownlint.yml" >> $GITHUB_STEP_SUMMARY
+          echo "- Pattern gate: P-24 (Canonical Practice Unit) surface consistency" >> $GITHUB_STEP_SUMMARY
+          echo "- Owner: Agent Sentinel (DGAF-Framework governance spine)" >> $GITHUB_STEP_SUMMARY

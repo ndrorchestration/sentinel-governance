@@ -1,0 +1,33 @@
+# markdownlint configuration for sentinel-governance
+# Tuned for DGAF-Framework gate spec docs (P-24 CPU format)
+# Owner: Agent Sentinel
+# See: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+default: true
+
+# MD013: Line length — disabled; gate spec tables and JSON blocks are intentionally wide
+MD013: false
+
+# MD024: Duplicate headings — disabled; gate docs reuse section names (Rationale, References) across files
+MD024: false
+
+# MD033: Inline HTML — disabled; badge rows in READMEs use <br> and <img>
+MD033: false
+
+# MD041: First line should be a top-level heading — disabled; some files open with HTML comments (status headers)
+MD041: false
+
+# MD034: Bare URLs — enabled; all links must be formatted as [text](url)
+MD034: true
+
+# MD022: Headings should be surrounded by blank lines — enabled
+MD022: true
+
+# MD032: Lists should be surrounded by blank lines — enabled
+MD032: true
+
+# MD010: Hard tabs — enabled; spaces only
+MD010: true
+
+# MD047: Files should end with a single newline — enabled
+MD047: true

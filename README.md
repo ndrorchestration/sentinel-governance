@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 ![Topics](https://img.shields.io/badge/topics-ci--cd%20%7C%20governance%20%7C%20integrity--monitoring%20%7C%20agent--sentinel-purple)
 
-> **Governance:** DGAF / Agent Amethyst — Yes. This repo is the CI/CD enforcement layer of the DGAF stack, operated by **Agent Sentinel**. See [DGAF-Framework](https://github.com/Flickerflash/DGAF-Framework) for spine documentation.
+> **Governance:** DGAF / Agent Amethyst — Yes. This repo is the CI/CD enforcement layer of the DGAF stack, operated by **Agent Sentinel**. See [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) for spine documentation.
 
 **Automated integrity monitoring and CI/CD governance sweeps for project stability, security compliance, and detect-remediate-revalidate operations.**
 
@@ -12,7 +12,7 @@
 
 ## What Sentinel Does
 
-Agent Sentinel enforces governance integrity across the Flickerflash ecosystem by:
+Agent Sentinel enforces governance integrity across the **ndrorchestration ecosystem** by:
 
 - **Detecting** structural violations, workflow failures, and boundary breaches
 - **Remediating** via automated patch requests or operator-assisted repair
@@ -49,7 +49,7 @@ See [docs/sentinel-operator.md](docs/sentinel-operator.md) for setup and webhook
 ## Quick Start
 
 ```bash
-git clone https://github.com/Flickerflash/sentinel-governance.git
+git clone https://github.com/ndrorchestration/sentinel-governance.git
 cd sentinel-governance
 pip install -r requirements.txt
 ```
@@ -70,11 +70,11 @@ python sentinel_operator.py --mode repair
 
 ## Related Ecosystem
 
-- [DGAF-Framework](https://github.com/Flickerflash/DGAF-Framework) — governance spine
-- [junior-apogee-app](https://github.com/Flickerflash/junior-apogee-app) — primary monitored system
-- [Amethyst-Governance-Eval-Stack](https://github.com/Flickerflash/Amethyst-Governance-Eval-Stack) — eval framework Sentinel protects
-- [Driftwatch](https://github.com/Flickerflash/Driftwatch) — drift detection; Sentinel responds to Driftwatch alerts
-- [Gold-star-standards](https://github.com/Flickerflash/Gold-star-standards) — certification standards Sentinel enforces
+- [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) — governance spine
+- [junior-apogee-app](https://github.com/ndrorchestration/junior-apogee-app) — primary monitored system
+- [Amethyst-Governance-Eval-Stack](https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack) — eval framework Sentinel protects
+- [Driftwatch](https://github.com/ndrorchestration/Driftwatch) — drift detection; Sentinel responds to Driftwatch alerts
+- [Gold-star-standards](https://github.com/ndrorchestration/Gold-star-standards) — certification standards Sentinel enforces
 
 ---
 
@@ -84,5 +84,5 @@ Apache 2.0 — see [LICENSE](LICENSE) for details.
 
 ## Provenance
 
-Developed by [Ndr "Ender" Hensel](https://github.com/Flickerflash) — AI Orchestration Engineer & Systems Architect, Columbus OH.  
-[Portfolio](https://flickerflash.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/andrewhensel) · [GitHub](https://github.com/Flickerflash)
+Developed by [Ndr "Ender" Hensel](https://github.com/ndrorchestration) — AI Orchestration Engineer & Systems Architect, Columbus OH.  
+[LinkedIn](https://www.linkedin.com/in/andrewhensel) · [GitHub](https://github.com/ndrorchestration)

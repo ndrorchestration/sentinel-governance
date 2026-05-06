@@ -1,19 +1,33 @@
-# Contributing
+# Contributing to Sentinel Governance
 
-> **Governance:** DGAF / Agent Sentinel — All changes to this repository are subject to Sentinel CI/CD integrity enforcement. Contributions must pass governance checks in `.governance/` before merge. See [DGAF-Framework](https://github.com/Flickerflash/DGAF-Framework) for spine documentation.
+## Governance
 
-## Scope
-This repository contains governance checks and the Sentinel GitHub Operator.
+This repository is governed under the [DGAF Framework](https://github.com/ndrorchestration/DGAF-Framework), meta-orchestrated by **Agent Amethyst**. Security protocols and CI/CD integrity rules are owned by **Agent Sentinel** (L3 Security).
 
-## Development
-- Keep changes small and reviewable.
-- Prefer explicit configuration over hidden defaults.
-- Validate with `npm run build` and `npm run lint` before pushing operator changes.
+## What This Repo Does
 
-## Secrets
-- Never commit `.env`, `private-key.pem`, or live credentials.
-- Use `.env.example` or `.env.local.example` for shareable templates.
+- Automated integrity monitoring across the ndrorchestration ecosystem
+- CI/CD governance sweeps via GitHub Actions
+- Security compliance checks (OWASP Agentic Top 10 alignment)
+- PowerShell + TypeScript integrity tooling
+- NDR-133 Personal Document Firewall enforcement automation
 
-## Pull Requests
-- Explain the operational impact of the change.
-- Note whether the change affects governance checks, GitHub App behavior, or orchestrator contracts.
+## Standards & Attribution
+
+- **OWASP Agentic Top 10** — Agentic security compliance
+- **NIST AI RMF** — Risk management alignment
+- **DGAF NDR-133** — Personal Document Firewall (Drive-only for personal docs)
+- **GitHub Actions** — CI/CD substrate
+
+## How to Contribute
+
+1. Open an issue describing the integrity gap or security concern
+2. Fork and branch from `main`
+3. All new sweep rules must reference the relevant NDR pattern
+4. Submit PR with evidence of sweep test passing
+
+## Cross-References
+
+- [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) — NDR pattern registry & governance
+- [junior-apogee-app](https://github.com/ndrorchestration/junior-apogee-app) — QA platform (Sentinel monitors)
+- [ai-governance-frameworks](https://github.com/ndrorchestration/ai-governance-frameworks) — Standards alignment

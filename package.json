@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "axios": "^1.7.2",
+    "axios": "^1.15.2",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2"
   },

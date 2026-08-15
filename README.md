@@ -1,37 +1,31 @@
 # sentinel-governance
-![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+
+![Status](https://img.shields.io/badge/Status-Experimental-blue)
 ![Language](https://img.shields.io/badge/Language-Python%20%7C%20Bash%20%7C%20PowerShell-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
-![Topics](https://img.shields.io/badge/topics-ci--cd%20%7C%20governance%20%7C%20integrity--monitoring%20%7C%20agent--sentinel-purple)
+![Topics](https://img.shields.io/badge/topics-ci--cd%20%7C%20integrity--monitoring-purple)
 
-> **Governance:** DGAF / Agent Amethyst — Yes. This repo is the CI/CD enforcement layer of the DGAF stack, operated by **Agent Sentinel**. See [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) for spine documentation.
+> **Epistemic status:** Experimental CI/CD integrity and automation repository. Implemented operator workflows should be distinguished from claims of ecosystem-wide enforcement, autonomous remediation, security compliance, or production reliability.
 
-**Automated integrity monitoring and CI/CD governance sweeps for project stability, security compliance, and detect-remediate-revalidate operations.**
+## Purpose
 
----
+`sentinel-governance` provides automation for observing GitHub Actions failures, collecting failure context, requesting workflow repairs, and optionally opening pull requests when the configured orchestrator returns a complete replacement workflow file.
+
+The repository is best understood as a **CI/CD automation and integrity-monitoring layer**, not as an independent certification authority.
 
 ## What Sentinel Does
 
-Agent Sentinel enforces governance integrity across the **ndrorchestration ecosystem** by:
+Where implemented, Sentinel can:
 
-- **Detecting** structural violations, workflow failures, and boundary breaches
-- **Remediating** via automated patch requests or operator-assisted repair
-- **Revalidating** that the fix holds before closing the loop
+- detect structural violations and workflow failures;
+- collect failure context;
+- request remediation from an external orchestrator;
+- operate in `observe` mode without opening a PR;
+- operate in `repair` mode and open a PR when the configured conditions are satisfied;
+- run cross-platform Bash and PowerShell checks;
+- re-run or validate configured checks after changes.
 
-This is the **detect-remediate-revalidate** cycle in production.
-
----
-
-## Core Capabilities
-
-- **GitHub App Operator** — listens for failed `workflow_run` events and forwards context to an external orchestrator
-- **Observe mode** — fetch failure context and request a patch without opening a PR
-- **Repair mode** — request a patch and open a PR when the orchestrator returns a full replacement workflow file
-- **Cross-platform parity** — Bash and PowerShell scripts maintained in sync
-- **Auto-healing structure checks** — validates repo structure integrity on every push
-- **Hardened CI** — GitHub Actions workflows with failure escalation to Sentinel operator
-
----
+The phrase **detect → remediate → revalidate** describes the intended workflow. It should not be interpreted as proof that every failure is automatically detected, repaired, or correctly resolved.
 
 ## Sentinel GitHub Operator
 
@@ -39,12 +33,10 @@ Runtime modes:
 
 | Mode | Behavior |
 |------|----------|
-| `observe` | Fetch failure context, request a patch — no PR opened |
-| `repair` | Request a patch, open a PR with full replacement workflow file |
+| `observe` | Fetch failure context and request a patch; no PR opened |
+| `repair` | Request a patch and open a PR when the configured orchestrator returns the required workflow replacement |
 
-See [docs/sentinel-operator.md](docs/sentinel-operator.md) for setup and webhook details.
-
----
+See `docs/sentinel-operator.md` for setup and webhook details.
 
 ## Quick Start
 
@@ -54,35 +46,50 @@ cd sentinel-governance
 pip install -r requirements.txt
 ```
 
-Configure your GitHub App credentials in `.env`, then run:
+Configure the required GitHub App credentials in `.env`, then run:
 
 ```bash
 python sentinel_operator.py --mode observe
 ```
 
-Or repair mode:
+Or:
 
 ```bash
 python sentinel_operator.py --mode repair
 ```
 
----
+Credentials enable the integration; they do not establish security certification or external compliance.
+
+## Terminology
+
+- **Sentinel** — project-local operator/automation name.
+- **DGAF** — Dynamic Governance Agentic Formation, a related but separate governance/evaluation research track.
+- **Amethyst** — related evaluation/orchestration terminology used elsewhere in the ecosystem.
+
+These names describe repository relationships and architecture. They are not independent authorities.
 
 ## Related Ecosystem
 
-- [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) — governance spine
-- [junior-apogee-app](https://github.com/ndrorchestration/junior-apogee-app) — primary monitored system
-- [Amethyst-Governance-Eval-Stack](https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack) — eval framework Sentinel protects
-- [Driftwatch](https://github.com/ndrorchestration/Driftwatch) — drift detection; Sentinel responds to Driftwatch alerts
-- [Gold-star-standards](https://github.com/ndrorchestration/Gold-star-standards) — certification standards Sentinel enforces
+- `DGAF-Framework` — related governance/evaluation research track
+- `junior-apogee-app` — related evaluation/QA track
+- `Amethyst-Governance-Eval-Stack` — related evaluation/orchestration track
+- `Driftwatch` — separate drift-detection track
+- `Gold-star-standards` — related internal rubric/standards artifacts
 
----
+Cross-repository references do not establish mutual validation, certification, or security compliance.
+
+## Epistemic Standard
+
+Claims should distinguish:
+
+**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
+
+A successful CI run demonstrates the checks that ran under those conditions. It does not automatically establish ecosystem-wide reliability or security compliance.
 
 ## License
 
-Apache 2.0 — see [LICENSE](LICENSE) for details.
+Apache 2.0 — see `LICENSE` for details.
 
 ## Provenance
 
-Developed by [Ndr "Ender" Hensel](https://github.com/ndrorchestration) — AI Orchestration Engineer & Systems Architect, Columbus OH.  
-[LinkedIn](https://www.linkedin.com/in/andrewhensel) · [GitHub](https://github.com/ndrorchestration)
+Developed by Ndr / Ender Hensel (`ndrorchestration`).

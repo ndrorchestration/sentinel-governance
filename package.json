@@ -1,13 +1,14 @@
 {
   "name": "sentinel-github-operator",
   "version": "1.0.0",
-  "description": "Sentinel GitHub App operator: webhook handler, CI failure detection, LLM-driven patch PRs",
+  "description": "Experimental Sentinel GitHub App operator for observing CI failures and fail-closed workflow repair proposals",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "npm run build && node --test test/*.test.cjs"
   },
   "dependencies": {
     "adm-zip": "^0.5.10",

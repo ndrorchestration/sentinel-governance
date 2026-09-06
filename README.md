@@ -1,95 +1,97 @@
 # sentinel-governance
 
-![Status](https://img.shields.io/badge/Status-Experimental-blue)
-![Language](https://img.shields.io/badge/Language-Python%20%7C%20Bash%20%7C%20PowerShell-blue)
-![License](https://img.shields.io/badge/License-Apache%202.0-blue)
-![Topics](https://img.shields.io/badge/topics-ci--cd%20%7C%20integrity--monitoring-purple)
+> **Epistemic status:** Experimental CI/CD integrity and automation repository. Sentinel can observe selected GitHub Actions failures and, in repair mode, propose a replacement workflow through an external orchestrator. It is not an autonomous certification authority or proof that failures are correctly repaired.
 
-> **Epistemic status:** Experimental CI/CD integrity and automation repository. Implemented operator workflows should be distinguished from claims of ecosystem-wide enforcement, autonomous remediation, security compliance, or production reliability.
+## Current operator model
 
-## Purpose
+```text
+GitHub workflow_run failure
+        ↓
+verify webhook signature + delivery identity
+        ↓
+collect failed-job context / log tails / exact workflow
+        ↓
+external orchestrator proposes replacement
+        ↓
+Sentinel structural mutation gate
+        ↓
+observe mode ──→ record only; NO GitHub mutation
+repair mode  ──→ open reviewable PR only if gate passes
+```
 
-`sentinel-governance` provides automation for observing GitHub Actions failures, collecting failure context, requesting workflow repairs, and optionally opening pull requests when the configured orchestrator returns a complete replacement workflow file.
+## Implemented controls
 
-The repository is best understood as a **CI/CD automation and integrity-monitoring layer**, not as an independent certification authority.
+Where configured, the TypeScript GitHub operator provides:
 
-## What Sentinel Does
+- HMAC webhook signature verification;
+- short-lived duplicate-delivery suppression;
+- GitHub App installation-token acquisition/caching;
+- detection of completed `failure`, `timed_out`, and `startup_failure` workflow runs;
+- failed-job and log-tail collection;
+- exact failed-workflow retrieval;
+- external orchestrator call with a bounded timeout;
+- explicit `observe` and `repair` modes;
+- **observe-mode no-write behavior** after a proposed replacement is generated;
+- **fail-closed workflow replacement validation** before repair mutation;
+- reviewable branch/PR creation rather than direct merge.
 
-Where implemented, Sentinel can:
+## Repair mutation gate
 
-- detect structural violations and workflow failures;
-- collect failure context;
-- request remediation from an external orchestrator;
-- operate in `observe` mode without opening a PR;
-- operate in `repair` mode and open a PR when the configured conditions are satisfied;
-- run cross-platform Bash and PowerShell checks;
-- re-run or validate configured checks after changes.
+A proposed repair is rejected unless it:
 
-The phrase **detect → remediate → revalidate** describes the intended workflow. It should not be interpreted as proof that every failure is automatically detected, repaired, or correctly resolved.
+- targets a `.github/workflows/*.yml` or `.yaml` path;
+- contains no `..` path traversal;
+- is non-empty and below the configured size bound;
+- is a complete workflow document rather than a unified diff/patch fragment;
+- contains top-level workflow trigger (`on`) and `jobs` keys.
 
-## Sentinel GitHub Operator
+The gate is checked before entering repair mutation and again in the PR-application function. Deterministic tests cover valid replacement, out-of-scope paths, traversal, unified diffs, non-workflow text, and empty responses.
 
-Runtime modes:
+These checks establish a **structural mutation boundary**, not semantic correctness of the proposed workflow. Human review remains required before merge.
+
+## Verification
+
+```bash
+npm ci
+npm run lint
+npm test
+```
+
+The operator CI workflow runs locked installation, TypeScript checking, build, and deterministic repair-boundary tests.
+
+## Modes
 
 | Mode | Behavior |
-|------|----------|
-| `observe` | Fetch failure context and request a patch; no PR opened |
-| `repair` | Request a patch and open a PR when the configured orchestrator returns the required workflow replacement |
+|---|---|
+| `observe` | Collect context and request a replacement; GitHub mutation is skipped even when a valid replacement is returned. |
+| `repair` | May open a repair PR only after the replacement passes the structural mutation gate. |
 
-See `docs/sentinel-operator.md` for setup and webhook details.
+## What is not established
 
-## Quick Start
+The repository does **not** establish:
 
-```bash
-git clone https://github.com/ndrorchestration/sentinel-governance.git
-cd sentinel-governance
-pip install -r requirements.txt
-```
+- that every CI failure is detected;
+- that an external orchestrator diagnoses failures correctly;
+- that a structurally valid replacement is semantically correct;
+- that repair PRs should be merged automatically;
+- ecosystem-wide enforcement;
+- security compliance or certification;
+- production reliability.
 
-Configure the required GitHub App credentials in `.env`, then run:
+## Related ecosystem
 
-```bash
-python sentinel_operator.py --mode observe
-```
+DGAF-Framework, Driftwatch, Agent Control Plane, Amethyst-related work, and other repositories have separate evidence boundaries. A Sentinel integration does not transfer validation between repositories.
 
-Or:
+## Evidence standard
 
-```bash
-python sentinel_operator.py --mode repair
-```
+`DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
 
-Credentials enable the integration; they do not establish security certification or external compliance.
-
-## Terminology
-
-- **Sentinel** — project-local operator/automation name.
-- **DGAF** — Dynamic Governance Agentic Formation, a related but separate governance/evaluation research track.
-- **Amethyst** — related evaluation/orchestration terminology used elsewhere in the ecosystem.
-
-These names describe repository relationships and architecture. They are not independent authorities.
-
-## Related Ecosystem
-
-- `DGAF-Framework` — related governance/evaluation research track
-- `junior-apogee-app` — related evaluation/QA track
-- `Amethyst-Governance-Eval-Stack` — related evaluation/orchestration track
-- `Driftwatch` — separate drift-detection track
-- `Gold-star-standards` — related internal rubric/standards artifacts
-
-Cross-repository references do not establish mutual validation, certification, or security compliance.
-
-## Epistemic Standard
-
-Claims should distinguish:
-
-**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
-
-A successful CI run demonstrates the checks that ran under those conditions. It does not automatically establish ecosystem-wide reliability or security compliance.
+A successful CI run demonstrates only the checks that ran at that revision. A generated repair is a proposal until independently reviewed and verified.
 
 ## License
 
-Apache 2.0 — see `LICENSE` for details.
+Apache 2.0 — see `LICENSE`.
 
 ## Provenance
 
-Developed by Ndr / Ender Hensel (`ndrorchestration`).
+Maintained by Ndr / Ender Hensel (`ndrorchestration`).

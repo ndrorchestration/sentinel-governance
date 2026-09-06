@@ -1,10 +1,7 @@
 # Doc-Lint CI Workflow
-# Pattern: P-24 (Canonical Practice Unit) | P-11 (11Q-Terminal-Gate gate 7 — Surface Consistency)
-# Owner: Agent Sentinel
-# Triggers: Pull requests + pushes to main touching markdown files
-# Purpose: Enforce markdown structural consistency across all docs;
-#          gate PR merge on zero markdownlint errors.
-#          Surfaces P-24 non-compliance as CI failures before merge.
+# Purpose: enforce Markdown structural consistency on current documentation.
+# Historical evidence snapshots and the legacy pattern register are retained as
+# historical records and excluded from style normalization.
 
 name: Doc Lint
 
@@ -22,6 +19,9 @@ on:
       - '.markdownlint.yml'
       - '.markdownlint.json'
 
+permissions:
+  contents: read
+
 jobs:
   markdownlint:
     name: Markdown Lint
@@ -35,7 +35,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install markdownlint-cli
         run: npm install -g markdownlint-cli@0.39.0
@@ -46,15 +46,15 @@ jobs:
             --config .markdownlint.yml \
             --ignore node_modules \
             --ignore CHANGELOG.md \
+            --ignore docs/EVIDENCE_STATUS_2026-08-30.md \
+            --ignore docs/REPOSITORY_QUALITY_BASELINE_2026-08-15.md \
+            --ignore knowledge-base/PATTERNS.md \
             '**/*.md'
-        # Exit code 1 on any lint error — blocks PR merge
-        # CHANGELOG.md is ignored: its auto-generated format may vary
 
       - name: Report summary
         if: always()
         run: |
-          echo "## Doc Lint Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
-          echo "- Config: .markdownlint.yml" >> $GITHUB_STEP_SUMMARY
-          echo "- Pattern gate: P-24 (Canonical Practice Unit) surface consistency" >> $GITHUB_STEP_SUMMARY
-          echo "- Owner: Agent Sentinel (DGAF-Framework governance spine)" >> $GITHUB_STEP_SUMMARY
+          echo "## Doc Lint Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Linter: markdownlint-cli 0.39.0" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Config: .markdownlint.yml" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Scope: current documentation; dated evidence snapshots and legacy pattern register excluded" >> "$GITHUB_STEP_SUMMARY"

@@ -23,9 +23,11 @@
 ### Task 1: Add current-authority regression test
 
 **Files:**
+
 - Create: `test/persona-role-policy.test.cjs`
 
 **Interfaces:**
+
 - Consumes: `CONTRIBUTING.md`, `knowledge-base/PATTERNS.md`
 - Produces: test assertions that current-facing sections use functional role IDs and historical audit sections may retain actor names.
 
@@ -77,10 +79,12 @@ git commit -m "test: require role-keyed governance ownership"
 ### Task 2: Migrate current governance/security ownership
 
 **Files:**
+
 - Modify: `CONTRIBUTING.md`
 - Modify: `knowledge-base/PATTERNS.md`
 
 **Interfaces:**
+
 - Consumes: canonical `role.governance-orchestrator`, `role.security-containment-gate`, `role.continuity-archive-coordinator`, `role.constraint-qa-auditor`, `role.provenance-archivist`, `role.publication-executor` role IDs.
 - Produces: current-facing role-keyed governance language with historical audit attribution unchanged.
 
@@ -112,9 +116,11 @@ git commit -m "docs: migrate governance ownership to functional roles"
 ### Task 3: Review and acceptance
 
 **Files:**
+
 - Review only: branch diff and issue #10.
 
 **Interfaces:**
+
 - Consumes: exact-head test results and branch diff.
 - Produces: merge decision and issue closure only if no current named identity retains authority semantics.
 

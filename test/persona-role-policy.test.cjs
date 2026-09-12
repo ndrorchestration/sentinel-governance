@@ -17,12 +17,16 @@ test('current governance ownership is role-keyed', () => {
   assert.doesNotMatch(contributing, /meta-orchestrated by \*\*Agent Amethyst\*\*/);
 });
 
-test('active pattern register is role-keyed while historical audit is preserved', () => {
+test('pattern register overlays current role ownership while preserving historical lineage', () => {
   const patterns = read('knowledge-base/PATTERNS.md');
   const [active, historical = ''] = patterns.split('## Session Audit Trail');
+  assert.match(active, /## Current Functional Role Ownership — 2026-09-12/);
   assert.match(active, /role\.governance-orchestrator/);
   assert.match(active, /role\.security-containment-gate/);
-  assert.doesNotMatch(active, /\*\*Primary Agent:\*\*/);
+  assert.match(active, /role\.continuity-archive-coordinator/);
+  assert.match(active, /Legacy `Primary Agent` and `Supporting Agents` fields below are historical lineage/);
+  assert.match(active, /Bare `Sentinel` is historical-only/);
+  assert.match(active, /\*\*Primary Agent:\*\*/);
   assert.match(historical, /Agent Amethyst/);
   assert.match(historical, /Agent COLLEEN/);
 });

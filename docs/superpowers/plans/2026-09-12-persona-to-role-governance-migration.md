@@ -4,7 +4,7 @@
 
 **Goal:** Remove current governance/security authority dependence on named-agent identities while preserving historical attribution and existing enforcement behavior.
 
-**Architecture:** Treat current-facing ownership statements as functional dependencies and replace them with canonical DGAF role IDs. Preserve the historical audit trail verbatim. Add a repository-local regression test that rejects named-agent authority language in current sections while allowing it below the historical audit boundary.
+**Architecture:** Replace current-facing ownership in `CONTRIBUTING.md` with canonical DGAF functional roles. Preserve the legacy NDR pattern register and its event-time agent fields unchanged, while prepending a current functional-role ownership overlay that explicitly supersedes those fields for present authority interpretation. Add repository-local regression coverage for both current role ownership and historical-lineage preservation.
 
 **Tech Stack:** Markdown, Node.js built-in test runner, repository `npm test` pipeline.
 
@@ -29,7 +29,7 @@
 **Interfaces:**
 
 - Consumes: `CONTRIBUTING.md`, `knowledge-base/PATTERNS.md`
-- Produces: test assertions that current-facing sections use functional role IDs and historical audit sections may retain actor names.
+- Produces: assertions that current authority is role-keyed while legacy agent fields remain historical lineage.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -53,12 +53,16 @@ test('current governance ownership is role-keyed', () => {
   assert.doesNotMatch(contributing, /meta-orchestrated by \*\*Agent Amethyst\*\*/);
 });
 
-test('active pattern register is role-keyed while historical audit is preserved', () => {
+test('pattern register overlays current role ownership while preserving historical lineage', () => {
   const patterns = read('knowledge-base/PATTERNS.md');
   const [active, historical = ''] = patterns.split('## Session Audit Trail');
+  assert.match(active, /## Current Functional Role Ownership — 2026-09-12/);
   assert.match(active, /role\.governance-orchestrator/);
   assert.match(active, /role\.security-containment-gate/);
-  assert.doesNotMatch(active, /\*\*Primary Agent:\*\*/);
+  assert.match(active, /role\.continuity-archive-coordinator/);
+  assert.match(active, /Legacy `Primary Agent` and `Supporting Agents` fields below are historical lineage/);
+  assert.match(active, /Bare `Sentinel` is historical-only/);
+  assert.match(active, /\*\*Primary Agent:\*\*/);
   assert.match(historical, /Agent Amethyst/);
   assert.match(historical, /Agent COLLEEN/);
 });
@@ -67,7 +71,7 @@ test('active pattern register is role-keyed while historical audit is preserved'
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `node --test test/persona-role-policy.test.cjs`
-Expected: FAIL because current documents still use named-agent ownership.
+Expected: FAIL because current documents do not yet expose the role ownership contract.
 
 - [ ] **Step 3: Commit RED test**
 
@@ -86,15 +90,15 @@ git commit -m "test: require role-keyed governance ownership"
 **Interfaces:**
 
 - Consumes: canonical `role.governance-orchestrator`, `role.security-containment-gate`, `role.continuity-archive-coordinator`, `role.constraint-qa-auditor`, `role.provenance-archivist`, `role.publication-executor` role IDs.
-- Produces: current-facing role-keyed governance language with historical audit attribution unchanged.
+- Produces: current-facing functional-role authority with historical actor attribution unchanged.
 
 - [ ] **Step 1: Replace current CONTRIBUTING ownership**
 
-Use functional role IDs and state explicitly that historical persona labels are lineage only and do not transfer authority.
+Use functional role IDs and state explicitly that historical persona labels are lineage only and do not transfer authority. Bound standards wording to alignment rather than external compliance certification.
 
-- [ ] **Step 2: Convert PATTERNS current metadata**
+- [ ] **Step 2: Add current PATTERNS role overlay**
 
-Rename active `Primary Agent` / `Supporting Agents` fields to `Primary Role` / `Supporting Roles`, replace active pattern ownership with behavior-derived role IDs, and replace the current canonical agent table with a functional role-routing table. Do not edit content under `## Session Audit Trail`.
+Prepend a `Current Functional Role Ownership — 2026-09-12` section that maps active NDR pattern routing to canonical role IDs. Explicitly state that legacy `Maintained by`, `Authority`, `Primary Agent`, `Supporting Agents`, role tables, and session attribution are historical/provenance fields and are non-authoritative for present execution. Preserve the original register below the overlay unchanged.
 
 - [ ] **Step 3: Run focused regression test**
 
@@ -122,15 +126,15 @@ git commit -m "docs: migrate governance ownership to functional roles"
 **Interfaces:**
 
 - Consumes: exact-head test results and branch diff.
-- Produces: merge decision and issue closure only if no current named identity retains authority semantics.
+- Produces: merge decision and issue closure only if current named identities no longer control authority semantics.
 
 - [ ] **Step 1: Verify historical audit diff is zero**
 
-Compare content from `## Session Audit Trail` onward against `main`; expected byte-equivalent historical section.
+Confirm that the original `knowledge-base/PATTERNS.md` content from its legacy provenance header through `## Session Audit Trail` and below is retained, with only the new current overlay inserted ahead of it.
 
 - [ ] **Step 2: Verify authority non-expansion**
 
-Confirm the migration replaces stale identity ownership with functional contracts and does not add permissions, execution rights, certification, compliance, or DGAF authorization claims.
+Confirm the migration replaces stale current identity ownership with functional contracts and adds no permissions, execution rights, certification, compliance, or DGAF authorization claims.
 
 - [ ] **Step 3: Require exact-head CI before merge**
 

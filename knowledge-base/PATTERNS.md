@@ -1,5 +1,34 @@
 # NDR Pattern Register
 
+## Current Functional Role Ownership — 2026-09-12
+
+This section is the current authority interpretation for the legacy NDR pattern register below. The dated agent/persona fields remain preserved as historical lineage and source provenance; they do not independently grant present authority.
+
+- Governance coordination: **`role.governance-orchestrator`**
+- Security containment and CI hard-block enforcement: **`role.security-containment-gate`**
+- Continuity and archival coordination: **`role.continuity-archive-coordinator`**
+- Constraint and QA auditing: **`role.constraint-qa-auditor`**
+- Provenance preservation: **`role.provenance-archivist`**
+- Approved publication/release execution: **`role.publication-executor`**
+
+Bare `Sentinel` is historical-only in the accepted DGAF lineage and does not transfer an active authority seat. Current security behavior is bound to `role.security-containment-gate` and its documented boundary.
+
+Legacy `Primary Agent` and `Supporting Agents` fields below are historical lineage. For current operation, interpret them through the accepted DGAF role/capability registry and persona-lineage mapping rather than as executable authority by name.
+
+| Pattern | Current primary functional routing | Supporting functional routing |
+|---|---|---|
+| NDR-001 | `role.governance-orchestrator` | `role.continuity-archive-coordinator`, `role.publication-executor` |
+| NDR-002 | `role.constraint-qa-auditor` | `role.provenance-archivist`, `role.governance-orchestrator` |
+| NDR-003 | `role.governance-orchestrator` | `role.provenance-archivist` |
+| NDR-004 | `role.constraint-qa-auditor` | `role.security-containment-gate`, `role.continuity-archive-coordinator` |
+| NDR-005 | `role.security-containment-gate` | — |
+| NDR-006 | `role.provenance-archivist` | `role.constraint-qa-auditor` |
+| NDR-007 | `role.security-containment-gate` | `role.constraint-qa-auditor` |
+
+No role assignment here expands authority, establishes compliance, or changes DGAF authorization state. The original register follows unchanged as event-time provenance.
+
+---
+
 > **Maintained by:** Agent COLLEEN (Continuity & Compliance)  
 > **Authority:** Agent Amethyst (Meta-Orchestrator)  
 > **Last Updated:** 2026-04-29 — Session close (all OIs resolved)  

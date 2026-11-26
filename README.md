@@ -80,7 +80,7 @@ The repository does **not** establish:
 
 ## Related ecosystem
 
-DGAF-Framework, Driftwatch, Agent Control Plane, Amethyst-related work, and other repositories have separate evidence boundaries. A Sentinel integration does not transfer validation between repositories.
+Agentic Governance Orchestrator (proposed successor name for DGAF-Framework), Driftwatch, Agent Control Plane, Amethyst-related work, and other repositories have separate evidence boundaries. A Sentinel integration does not transfer validation between repositories.
 
 ## Evidence standard
 
